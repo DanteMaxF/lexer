@@ -1,13 +1,14 @@
 Program Example3;
 Var name, surname: String;
-     
+
 Begin
-	writeln('Enter your name:');
+	writeln("Enter your name:");
 	readln(name);
-	writeln('Enter your surname:');
+	writeln("Enter your surname:");
 	readln(surname);
 	writeln;
 	writeln;
-	writeln('Your full name is: ',name,' ',surname);
+	(* This is a Pascal comment *)
+	writeln("Your full name is: ",name," ",surname);
 	readln;
 End.

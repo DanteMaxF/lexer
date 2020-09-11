@@ -76,7 +76,7 @@ class Lexer:
         cs = '' + self.peek
 
         self.peek = self.inputF.getChar()
-        while (self.peek !=  "'"):
+        while (self.peek !=  '"'):
             cs += self.peek
             self.peek = self.inputF.getChar()
         cs  += self.peek
@@ -134,7 +134,7 @@ class Lexer:
             else:
                 return Token(':')
 
-        elif (self.peek == "'"):
+        elif (self.peek == '"'):
             return self.readCharacterString()
 
         if (self.peek.isdigit()):
