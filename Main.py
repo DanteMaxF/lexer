@@ -44,7 +44,7 @@ def main():
                     token2add = tag4Parser[token.tag]    
                 else:
                     token2add = token.tag
-                tokens.append([token2add, column, line])
+                tokens.append([token2add, line, column])
                 if debug:
                     print(token2add, end = '\t' )
             else:
