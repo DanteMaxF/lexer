@@ -33,7 +33,10 @@ class Parser:
 
             tableResult = self.actionDict[tkn[0]][state]
             if (tableResult == ''):
-                raise SyntaxError('Error at:' +'(' + str(tkn[1]) + ',' + str(tkn[2]) + '): ' + tkn[0])
+                errorTkn = tkn[0]
+                if (tkn[0] == '$'):
+                    errorTkn = 'EOF'
+                raise SyntaxError('Error at:' +'(' + str(tkn[1]) + ',' + str(tkn[2]) + '): ' + errorTkn)
 
             if self.debug:
                 print('action:', tableResult)
@@ -79,7 +82,9 @@ class Parser:
                     if self.debug:
                         print('Stack:', self.stack)
                 else:
-                    raise SyntaxError('Estas bien wey en el token: ' + tkn)
+                    if (tkn[0] == '$'):
+                        tkn[0] == 'end of file'
+                    raise SyntaxError('Error at:' +'(' + str(tkn[1]) + ',' + str(tkn[2]) + '): ' + tkn[0])
 
     def readCSV(self, filename):
         reader = csv.reader(open(filename, 'r'), delimiter=',')
