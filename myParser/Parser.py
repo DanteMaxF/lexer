@@ -6,13 +6,13 @@ class Parser:
 
     
 
-    def __init__(self, tableFile, grammarFile, tokens):
+    def __init__(self, tableFile, grammarFile, tokens, eofToken):
         self.actionDict = {} 
         self.gotoDict = {}
         self.readTable(tableFile)
         self.productions = self.readCSV(grammarFile)
         self.tokens = tokens
-        self.tokens.append('$')
+        self.tokens.append(eofToken)
         self.stack = ['0']
 
         self.debug = False
@@ -27,13 +27,13 @@ class Parser:
             tkn = self.tokens[-1]
 
             if self.debug:
-                print('input:', self.tokens[::-1])
+                print('input:', self.tokens[::-1][0])
 
             state = int(self.stack[-1])
 
-            tableResult = self.actionDict[tkn][state]
+            tableResult = self.actionDict[tkn[0]][state]
             if (tableResult == ''):
-                raise SyntaxError('Estas bien wey en el token: ' + tkn)
+                raise SyntaxError('Error at:' +'(' + str(tkn[1]) + ',' + str(tkn[2]) + '): ' + tkn[0])
 
             if self.debug:
                 print('action:', tableResult)
@@ -47,7 +47,7 @@ class Parser:
 
                 if action == 's':
                     token = self.tokens.pop()
-                    self.stack.append(token)
+                    self.stack.append(token[0])
                     self.stack.append(actionNumber)
                     if self.debug:
                         print('Stack:', self.stack)
@@ -69,7 +69,7 @@ class Parser:
 
                     if self.debug:
                         print('Stack:', self.stack)
-                        print('input:', self.tokens[::-1])
+                        print('input:', self.tokens[::-1][0])
 
                     gotoState = self.gotoDict[self.stack[-1]][int(self.stack[-2])]
                     if self.debug:

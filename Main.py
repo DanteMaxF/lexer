@@ -10,9 +10,12 @@ from lexer.InputFile import InputFile
 from lexer.Tag4Parser import tag4Parser
 from myParser.Parser import Parser
 
-debug = True
+debug = False
 
 def main():
+
+    commentsFound = 0
+
     if (len(sys.argv) != 2):
         print('usage: python Main.py file')
         return -1
@@ -26,11 +29,9 @@ def main():
     if debug:
         print('### PROGRAM WILL START ###\n')
 
-    # line = lex.inputF.lineNumber
-    # column = lex.inputF.columnNumber
+    line = lex.inputF.lineNumber + commentsFound
+    column = lex.inputF.columnNumber
     token = lex.scan()
-    # token.lineNumber = line
-    # token.columnNumber = column
     
     tokens = []
     token2add = ''
@@ -40,31 +41,33 @@ def main():
                 print('' + token.toString() + '\t\t', end = '' )
             if token.tag != 292:
                 if isinstance(token.tag, int):    
-                    token2add = tag4Parser[token.tag]
+                    token2add = tag4Parser[token.tag]    
                 else:
                     token2add = token.tag
-                tokens.append(token2add)
+                tokens.append([token2add, column, line])
                 if debug:
                     print(token2add, end = '\t' )
+            else:
+                commentsFound += 1
             if debug:
                 print()
 
-            # line = lex.inputF.lineNumber
-            # column = lex.inputF.columnNumber
+            line = lex.inputF.lineNumber + commentsFound
+            column = lex.inputF.columnNumber
             token = lex.scan()
-            # token.lineNumber = line
-            # token.columnNumber = column
     except Exception as error:
-        print('error')
         pass
+
+    eofToken = ['$', lex.inputF.lineNumber, lex.inputF.columnNumber]
 
     if debug:
         print("### END ###")
-        
-    myParser = Parser('myParser/table.csv', 'myParser/grammar.csv', tokens)
+  
+    myParser = Parser('myParser/table.csv', 'myParser/grammar.csv', tokens, eofToken)
     
     try:
         myParser.analyze()
+        print('All good')
     except SyntaxError as error:
         print(error)
     
