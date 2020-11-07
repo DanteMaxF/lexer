@@ -26,7 +26,7 @@ class Lexer:
         self.words = {}
         
         self.reserve(Word('program', Tag.PROGRAM))
-        self.reserve(Word('constante', Tag.CONSTANT))
+        self.reserve(Word('constant', Tag.CONSTANT))
         self.reserve(Word('var', Tag.VAR))
         self.reserve(Word('begin', Tag.BEGIN))
         self.reserve(Word('end', Tag.END))
@@ -76,7 +76,9 @@ class Lexer:
         cs = '' + self.peek
 
         self.peek = self.inputF.getChar()
-        while (self.peek !=  '"'):
+        while True:
+            if (self.peek == '"' or self.peek == "'"):
+                break
             cs += self.peek
             self.peek = self.inputF.getChar()
         cs  += self.peek
@@ -130,11 +132,12 @@ class Lexer:
         
         elif (self.peek == ':'):
             if ( self.readCh('=') ):
+                self.readCha()
                 return WordAux.assign
             else:
                 return Token(':')
 
-        elif (self.peek == '"'):
+        elif (self.peek == '"' or self.peek == "'"):
             return self.readCharacterString()
 
         if (self.peek.isdigit()):
@@ -179,7 +182,12 @@ class Lexer:
             return w
 
         tok = Token(self.peek)
-        self.readCha()
+
+        try:
+            self.readCha()
+        except EOFError:
+            return tok
+
         return tok
 
 
