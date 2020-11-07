@@ -1,0 +1,3 @@
+Para poder ejecutar el programa se necesita installar numpy:
+
+$ pip install numpy
