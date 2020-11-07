@@ -79,7 +79,7 @@ class Parser:
                     if self.debug:
                         print('Stack:', self.stack)
                 else:
-                    print('ERROR DE GRAMÁTICA')
+                    raise SyntaxError('Estas bien wey en el token: ' + tkn)
 
     def readCSV(self, filename):
         reader = csv.reader(open(filename, 'r'), delimiter=',')
